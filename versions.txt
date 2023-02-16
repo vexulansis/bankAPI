@@ -13,3 +13,8 @@ v0.02:
 -Added server creation in main.go
 -Fixed server struct naming
 -Added .env
+
+v0.03:
+-Added handlers configuration method
+-Added root and auth handler signatures
+-Added server respond helpers

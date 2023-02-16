@@ -25,6 +25,7 @@ func NewServer(storage *storage.Storage) *Server {
 		Logger:  logrus.New(),
 		Storage: storage,
 	}
+	s.ConfigureRouter()
 	return s
 }
 
