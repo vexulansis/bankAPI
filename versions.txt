@@ -18,3 +18,10 @@ v0.03:
 -Added handlers configuration method
 -Added root and auth handler signatures
 -Added server respond helpers
+
+v0.04:
+-Added basic user structure
+-Added users table in database
+-Added /auth (POST) handler basic logic
+-Added handler func signature in examples file
+-Fixed handler and path discrepancy

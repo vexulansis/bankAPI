@@ -1,6 +1,8 @@
 package server
 
 import (
+	"bankAPI/internal/model"
+	"encoding/json"
 	"net/http"
 )
 
@@ -10,8 +12,8 @@ func (s *Server) ConfigureRouter() {
 	s.Router.HandleFunc("/", s.RootGetHandler).Methods("GET")
 	s.Router.HandleFunc("/", s.RootPostHandler).Methods("POST")
 	// Auth directory
-	s.Router.HandleFunc("/auth", s.RootGetHandler).Methods("GET")
-	s.Router.HandleFunc("/auth", s.RootPostHandler).Methods("POST")
+	s.Router.HandleFunc("/auth", s.AuthGetHandler).Methods("GET")
+	s.Router.HandleFunc("/auth", s.AuthPostHandler).Methods("POST")
 }
 
 // Handles GET method in root directory
@@ -31,5 +33,19 @@ func (s *Server) AuthGetHandler(w http.ResponseWriter, r *http.Request) {
 
 // Handles POST method in /auth
 func (s *Server) AuthPostHandler(w http.ResponseWriter, r *http.Request) {
-
+	type Request struct {
+		Login    string `json:"login"`
+		Password string `json:"password"`
+	}
+	req := &Request{}
+	err := json.NewDecoder(r.Body).Decode(req)
+	if err != nil {
+		s.Error(w, r, http.StatusBadRequest, err)
+		return
+	}
+	u := &model.User{
+		Login:    req.Login,
+		Password: req.Password,
+	}
+	s.Respond(w, r, http.StatusOK, u)
 }
