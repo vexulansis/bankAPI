@@ -1,0 +1,5 @@
+v0.00:
+-Added basic project structure
+v0.01:
+-Added server and storage structures
+-Added versions.txt
