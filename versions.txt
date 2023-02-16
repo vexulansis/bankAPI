@@ -1,5 +1,15 @@
 v0.00:
 -Added basic project structure
+
 v0.01:
 -Added server and storage structures
 -Added versions.txt
+
+v0.02:
+-Added server factory
+-Added server starting method
+-Added storage factory
+-Added methods to connect database
+-Added server creation in main.go
+-Fixed server struct naming
+-Added .env
