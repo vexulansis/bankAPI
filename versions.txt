@@ -25,3 +25,7 @@ v0.04:
 -Added /auth (POST) handler basic logic
 -Added handler func signature in examples file
 -Fixed handler and path discrepancy
+
+v0.05:
+-Added optional search in database
+-Expanded user struct
