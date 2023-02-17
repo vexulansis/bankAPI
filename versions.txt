@@ -36,3 +36,10 @@ v0.06:
 -Modified user structure with auth substructure
 -Added creation method in /auth (POST) handler
 -Fixed search file naming
+
+v0.07:
+-Fixed handlers naming
+-Modified basic registartion logic
+-Added user existence verification method
+-Added user and auth sql.Rows parsing methods 
+-Fixed and modified optional search

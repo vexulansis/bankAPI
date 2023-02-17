@@ -9,6 +9,7 @@ import (
 type Searcher struct {
 	Data      any
 	Table     string
+	RefName   string
 	Reference string
 }
 type SearchOption func(*Searcher)
@@ -37,6 +38,13 @@ func WithTable(table string) SearchOption {
 }
 
 // Search by ...
+func WithReferenceName(refn string) SearchOption {
+	return func(s *Searcher) {
+		s.RefName = refn
+	}
+}
+
+// Search(...)
 func WithReference(ref string) SearchOption {
 	return func(s *Searcher) {
 		s.Reference = ref
@@ -47,9 +55,9 @@ func WithReference(ref string) SearchOption {
 func (storage *Storage) Search(opts ...SearchOption) (*sql.Rows, error) {
 	s := NewSearcher(opts...)
 	switch s.Data.(type) {
-	case model.User:
-		query := fmt.Sprintf("select * from %s where %s=$1", s.Table, s.Reference)
-		rows, err := storage.DB.Query(query)
+	case *model.User:
+		query := fmt.Sprintf("select * from %s where %s=$1", s.Table, s.RefName)
+		rows, err := storage.DB.Query(query, s.Reference)
 		if err != nil {
 			return nil, err
 		}

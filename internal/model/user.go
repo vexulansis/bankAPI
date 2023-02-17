@@ -7,6 +7,7 @@ type User struct {
 	Auth  Auth   `json:"auth"`
 }
 type Auth struct {
+	User_id  int    `json:"user_id"`
 	Login    string `json:"login"`
 	Password string `json:"password"`
 }
