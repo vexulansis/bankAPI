@@ -29,3 +29,10 @@ v0.04:
 v0.05:
 -Added optional search in database
 -Expanded user struct
+
+v0.06:
+-Added database user creation method
+-Added auth table in database
+-Modified user structure with auth substructure
+-Added creation method in /auth (POST) handler
+-Fixed search file naming

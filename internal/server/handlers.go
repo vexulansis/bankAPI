@@ -43,9 +43,12 @@ func (s *Server) AuthPostHandler(w http.ResponseWriter, r *http.Request) {
 		s.Error(w, r, http.StatusBadRequest, err)
 		return
 	}
-	u := &model.User{
-		Login:    req.Login,
-		Password: req.Password,
+	u := new(model.User)
+	u.Auth.Login = req.Login
+	u.Auth.Password = req.Password
+	err = s.Storage.CreateUser(u)
+	if err != nil {
+		s.Error(w, r, http.StatusBadRequest, err)
 	}
-	s.Respond(w, r, http.StatusOK, u)
+	s.Respond(w, r, http.StatusCreated, u)
 }
