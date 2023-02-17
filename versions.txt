@@ -43,3 +43,8 @@ v0.07:
 -Added user existence verification method
 -Added user and auth sql.Rows parsing methods 
 -Fixed and modified optional search
+
+v0.08:
+-Moved parsers to parsers.go
+-Added method to verify user password
+-Added basic authentication logic

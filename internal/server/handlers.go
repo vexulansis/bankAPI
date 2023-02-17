@@ -54,7 +54,7 @@ func (s *Server) SignUp(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 	if exist {
-		s.Respond(w, r, http.StatusConflict, 0)
+		s.Respond(w, r, http.StatusConflict, "This login is already taken")
 		return
 	}
 	// Creating user
@@ -63,10 +63,43 @@ func (s *Server) SignUp(w http.ResponseWriter, r *http.Request) {
 		s.Error(w, r, http.StatusBadRequest, err)
 		return
 	}
-	s.Respond(w, r, http.StatusCreated, 0)
+	s.Respond(w, r, http.StatusCreated, "User created successfully")
 }
 
 // Handles authentication
 func (s *Server) SignIn(w http.ResponseWriter, r *http.Request) {
-
+	type Request struct {
+		Login    string `json:"login"`
+		Password string `json:"password"`
+	}
+	type Respond struct {
+		Message string
+	}
+	// Parsing request
+	req := &Request{}
+	err := json.NewDecoder(r.Body).Decode(req)
+	if err != nil {
+		s.Error(w, r, http.StatusBadRequest, err)
+		return
+	}
+	// Checking user in database
+	u := new(model.User)
+	u.Auth.Login = req.Login
+	u.Auth.Password = req.Password
+	exist, err := s.Storage.CheckUser(u)
+	if err != nil {
+		s.Error(w, r, http.StatusBadRequest, err)
+		return
+	}
+	if !exist {
+		s.Respond(w, r, http.StatusUnauthorized, "User doesn't exist")
+		return
+	}
+	// Verifying password
+	verified, err := s.Storage.VerifyPassword(u)
+	if !verified {
+		s.Respond(w, r, http.StatusUnauthorized, "Wrong password")
+		return
+	}
+	s.Respond(w, r, http.StatusAccepted, "Access")
 }

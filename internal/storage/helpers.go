@@ -2,7 +2,6 @@ package storage
 
 import (
 	"bankAPI/internal/model"
-	"database/sql"
 )
 
 // Verify user existence
@@ -26,30 +25,24 @@ func (storage *Storage) CheckUser(u *model.User) (bool, error) {
 	return true, nil
 }
 
-// Get user info from sql.Rows
-func ParseUserInfo(rows *sql.Rows) ([]*model.User, error) {
-	users := []*model.User{}
-	for rows.Next() {
-		u := new(model.User)
-		err := rows.Scan(&u.ID, &u.Name, &u.Email)
-		if err != nil {
-			return nil, err
-		}
-		users = append(users, u)
+// Verify user password
+func (storage *Storage) VerifyPassword(u *model.User) (bool, error) {
+	rows, err := storage.Search(
+		WithData(u),
+		WithTable("auth"),
+		WithReferenceName("login"),
+		WithReference(u.Auth.Login),
+	)
+	if err != nil {
+		return false, err
 	}
-	return users, nil
-}
-
-// Get auth info from sql.Rows
-func ParseAuthInfo(rows *sql.Rows) ([]*model.Auth, error) {
-	auths := []*model.Auth{}
-	for rows.Next() {
-		a := new(model.Auth)
-		err := rows.Scan(&a.User_id, &a.Login, &a.Password)
-		if err != nil {
-			return nil, err
-		}
-		auths = append(auths, a)
+	auths, err := ParseAuthInfo(rows)
+	if err != nil {
+		return false, err
 	}
-	return auths, nil
+	ref := auths[0]
+	if ref.Password == u.Auth.Password {
+		return true, nil
+	}
+	return false, nil
 }
