@@ -24,7 +24,7 @@ func ParseAuthInfo(rows *sql.Rows) ([]*model.Auth, error) {
 	auths := []*model.Auth{}
 	for rows.Next() {
 		a := new(model.Auth)
-		err := rows.Scan(&a.User_id, &a.Login, &a.Password)
+		err := rows.Scan(&a.User_id, &a.Login, &a.EncryptedPassword)
 		if err != nil {
 			return nil, err
 		}

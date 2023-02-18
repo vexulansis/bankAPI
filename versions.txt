@@ -48,3 +48,12 @@ v0.08:
 -Moved parsers to parsers.go
 -Added method to verify user password
 -Added basic authentication logic
+
+v0.09:
+-Modified user structure
+-Added method to prepare user before creation
+-Added hash function for password
+-Modified registration logic
+-Modified auth parser
+-Modified password verification method
+-Modified authentication logic

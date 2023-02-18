@@ -2,6 +2,8 @@ package storage
 
 import (
 	"bankAPI/internal/model"
+
+	"golang.org/x/crypto/bcrypt"
 )
 
 // Verify user existence
@@ -41,8 +43,9 @@ func (storage *Storage) VerifyPassword(u *model.User) (bool, error) {
 		return false, err
 	}
 	ref := auths[0]
-	if ref.Password == u.Auth.Password {
-		return true, nil
+	err = bcrypt.CompareHashAndPassword([]byte(ref.EncryptedPassword), []byte(u.Auth.Password))
+	if err != nil {
+		return false, nil
 	}
-	return false, nil
+	return true, nil
 }

@@ -57,13 +57,19 @@ func (s *Server) SignUp(w http.ResponseWriter, r *http.Request) {
 		s.Respond(w, r, http.StatusConflict, "This login is already taken")
 		return
 	}
+	// Preparing user before creation
+	err = u.BeforeCreate()
+	if err != nil {
+		s.Error(w, r, http.StatusBadRequest, err)
+		return
+	}
 	// Creating user
 	err = s.Storage.CreateUser(u)
 	if err != nil {
 		s.Error(w, r, http.StatusBadRequest, err)
 		return
 	}
-	s.Respond(w, r, http.StatusCreated, "User created successfully")
+	s.Respond(w, r, http.StatusCreated, u)
 }
 
 // Handles authentication
@@ -97,6 +103,9 @@ func (s *Server) SignIn(w http.ResponseWriter, r *http.Request) {
 	}
 	// Verifying password
 	verified, err := s.Storage.VerifyPassword(u)
+	if err != nil {
+		s.Error(w, r, http.StatusBadRequest, err)
+	}
 	if !verified {
 		s.Respond(w, r, http.StatusUnauthorized, "Wrong password")
 		return
